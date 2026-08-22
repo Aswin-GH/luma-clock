@@ -13,7 +13,7 @@ let scale = Math.min(1, Number(localStorage.getItem("clock-scale")) || 1);
 const pointers = new Map();
 let gesture = {};
 
-function mixColor(hex, accent, amount = .06) {
+function mixColor(hex, accent, amount = .14) {
   const rgb = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16));
   const target = [1, 3, 5].map(i => parseInt(accent.slice(i, i + 2), 16));
   return `rgb(${rgb.map((value, i) => Math.round(value * (1 - amount) + target[i] * amount)).join(",")})`;
