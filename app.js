@@ -67,4 +67,4 @@ function pointerEnd(e) { const tap=pointers.size===1&&!gesture.moved; pointers.d
 app.addEventListener("pointerup",pointerEnd); app.addEventListener("pointercancel",pointerEnd);
 toggle.addEventListener("click",()=>{ mode=mode==="digital"?"analog":"digital"; paint(); save(); });
 paint(); drift(); tick(); setInterval(tick,1000);
-if("serviceWorker" in navigator) navigator.serviceWorker.register("./sw.js");
+if("serviceWorker" in navigator) navigator.serviceWorker.register("./sw.js", { updateViaCache: "none" }).then(registration => registration.update());

@@ -21,6 +21,9 @@
     .analog-clock .marker { width: clamp(10px, 2vmin, 20px); height: clamp(10px, 2vmin, 20px); border-radius: 50%; }
     .analog-clock .marker-12, .analog-clock .marker-6 { left: 50%; transform: translateX(-50%); }
     .analog-clock .marker-3, .analog-clock .marker-9 { top: 50%; transform: translateY(-50%); }
+    .analog-clock .hand { clip-path: polygon(36% 0, 64% 0, 100% 100%, 0 100%); border-radius: 45% 45% 28% 28%; }
+    .analog-clock .hour-hand { width: clamp(20px, 3.8vmin, 44px); }
+    .analog-clock .minute-hand { width: clamp(13px, 2.4vmin, 29px); }
   </style>
 </head>
 <body>
@@ -35,6 +38,6 @@
     <button class="mode-toggle" type="button" aria-label="Switch to analog clock"><span class="analog-icon"><i></i><i></i></span></button>
     <p class="gesture-hint">tap · color&nbsp;&nbsp; swipe · brightness&nbsp;&nbsp; pinch · size</p>
   </main>
-  <script src="./app.js"></script>
+  <script src="./app.js?v=7"></script>
 </body>
 </html>
