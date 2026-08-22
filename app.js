@@ -53,7 +53,7 @@ function drift(now = new Date()) {
 function distance() { const p=[...pointers.values()]; return p.length<2?0:Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y); }
 app.addEventListener("pointerdown", e => {
   if (e.target.closest?.(".mode-toggle")) return;
-  app.setPointerCapture(e.pointerId); pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
   if(pointers.size===1) gesture={startY:e.clientY,startBrightness:brightness,startDistance:0,startScale:scale,moved:false};
   else if(pointers.size===2) { gesture.startDistance=distance(); gesture.startScale=scale; gesture.moved=true; }
 });
@@ -63,7 +63,7 @@ app.addEventListener("pointermove", e => {
   else if(pointers.size===1) { const delta=gesture.startY-e.clientY; if(Math.abs(delta)>10) gesture.moved=true; brightness=Math.min(1.25,Math.max(.18,gesture.startBrightness+delta/innerHeight)); }
   paint();
 });
-function pointerEnd(e) { const tap=pointers.size===1&&!gesture.moved; pointers.delete(e.pointerId); if(tap) color=(color+1)%colors.length; if(pointers.size<2) gesture.startDistance=0; paint(); save(); }
+function pointerEnd(e) { if(!pointers.has(e.pointerId)) return; const tap=pointers.size===1&&!gesture.moved; pointers.delete(e.pointerId); if(tap) color=(color+1)%colors.length; if(pointers.size<2) gesture.startDistance=0; paint(); save(); }
 app.addEventListener("pointerup",pointerEnd); app.addEventListener("pointercancel",pointerEnd);
 toggle.addEventListener("click",()=>{ mode=mode==="digital"?"analog":"digital"; paint(); save(); });
 paint(); drift(); tick(); setInterval(tick,1000);
