@@ -1,5 +1,5 @@
-const CACHE = "luma-clock-v10";
-const APP = ["./", "./index.html", "./styles.css", "./app.js?v=9", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png"];
+const CACHE = "luma-clock-v11";
+const APP = ["./", "./index.html", "./styles.css", "./app.js?v=11", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png"];
 self.addEventListener("install", (event) => event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(APP)).then(() => self.skipWaiting())));
 self.addEventListener("activate", (event) => event.waitUntil(caches.keys().then((keys) => Promise.all(keys.filter((key) => key !== CACHE).map((key) => caches.delete(key)))).then(() => self.clients.claim())));
 self.addEventListener("fetch", (event) => {

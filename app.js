@@ -13,10 +13,21 @@ let scale = Math.min(1, Number(localStorage.getItem("clock-scale")) || 1);
 const pointers = new Map();
 let gesture = {};
 
-function mixColor(hex, accent, amount = .14) {
-  const rgb = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16));
-  const target = [1, 3, 5].map(i => parseInt(accent.slice(i, i + 2), 16));
-  return `rgb(${rgb.map((value, i) => Math.round(value * (1 - amount) + target[i] * amount)).join(",")})`;
+function shadeColor(hex, lightnessShift) {
+  const [r, g, b] = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16) / 255);
+  const max = Math.max(r, g, b), min = Math.min(r, g, b);
+  let hue = 0, saturation = 0;
+  const lightness = (max + min) / 2;
+  if (max !== min) {
+    const delta = max - min;
+    saturation = lightness > .5 ? delta / (2 - max - min) : delta / (max + min);
+    if (max === r) hue = (g - b) / delta + (g < b ? 6 : 0);
+    else if (max === g) hue = (b - r) / delta + 2;
+    else hue = (r - g) / delta + 4;
+    hue /= 6;
+  }
+  const shiftedLightness = Math.max(12, Math.min(100, lightness * 100 + lightnessShift));
+  return `hsl(${Math.round(hue * 360)} ${Math.round(saturation * 100)}% ${Math.round(shiftedLightness)}%)`;
 }
 
 function save() {
@@ -26,8 +37,8 @@ function save() {
 function paint() {
   const selectedColor = colors[color % colors.length];
   root.style.setProperty("--clock-color", selectedColor);
-  root.style.setProperty("--hour-color", mixColor(selectedColor, "#ff4fd8"));
-  root.style.setProperty("--minute-color", mixColor(selectedColor, "#39e7ff"));
+  root.style.setProperty("--hour-color", shadeColor(selectedColor, -11));
+  root.style.setProperty("--minute-color", shadeColor(selectedColor, 11));
   root.style.setProperty("--clock-brightness", brightness);
   root.style.setProperty("--clock-scale", scale);
   digital.hidden = mode !== "digital"; analog.hidden = mode !== "analog";

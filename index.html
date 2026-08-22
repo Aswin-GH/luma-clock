@@ -19,7 +19,7 @@
     .digital-clock span:first-child, .hour-hand { color: var(--hour-color, currentColor); }
     .digital-clock span:last-child, .minute-hand { color: var(--minute-color, currentColor); }
     .analog-clock { border: 0; box-shadow: none; }
-    .analog-clock .marker { width: clamp(10px, 2vmin, 20px); height: clamp(10px, 2vmin, 20px); border-radius: 50%; }
+    .analog-clock .marker { width: clamp(6px, 1vmin, 11px); height: clamp(6px, 1vmin, 11px); border-radius: 50%; }
     .analog-clock .marker-12, .analog-clock .marker-6 { left: 50%; transform: translateX(-50%); }
     .analog-clock .marker-3, .analog-clock .marker-9 { top: 50%; transform: translateY(-50%); }
     .analog-clock .hand { clip-path: polygon(36% 0, 64% 0, 100% 100%, 0 100%); border-radius: 45% 45% 28% 28%; }
@@ -33,12 +33,12 @@
       <div class="digital-clock"><span id="hours">00</span><span id="minutes">00</span></div>
       <div class="analog-clock" hidden aria-hidden="true">
         <div class="marker marker-12"></div><div class="marker marker-3"></div><div class="marker marker-6"></div><div class="marker marker-9"></div>
-        <div class="hand hour-hand"></div><div class="hand minute-hand"></div><div class="pin"></div>
+        <div class="hand hour-hand"></div><div class="hand minute-hand"></div>
       </div>
     </div>
     <button class="mode-toggle" type="button" aria-label="Switch to analog clock"><span class="analog-icon"><i></i><i></i></span></button>
     <p class="gesture-hint">tap · color&nbsp;&nbsp; swipe · brightness&nbsp;&nbsp; pinch · size</p>
   </main>
-  <script src="./app.js?v=9"></script>
+  <script src="./app.js?v=11"></script>
 </body>
 </html>
