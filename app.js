@@ -13,12 +13,21 @@ let scale = Math.min(1, Number(localStorage.getItem("clock-scale")) || 1);
 const pointers = new Map();
 let gesture = {};
 
+function mixColor(hex, accent, amount = .06) {
+  const rgb = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16));
+  const target = [1, 3, 5].map(i => parseInt(accent.slice(i, i + 2), 16));
+  return `rgb(${rgb.map((value, i) => Math.round(value * (1 - amount) + target[i] * amount)).join(",")})`;
+}
+
 function save() {
   localStorage.setItem("clock-mode", mode); localStorage.setItem("clock-color", color);
   localStorage.setItem("clock-brightness", brightness); localStorage.setItem("clock-scale", scale);
 }
 function paint() {
-  root.style.setProperty("--clock-color", colors[color % colors.length]);
+  const selectedColor = colors[color % colors.length];
+  root.style.setProperty("--clock-color", selectedColor);
+  root.style.setProperty("--hour-color", mixColor(selectedColor, "#ff4fd8"));
+  root.style.setProperty("--minute-color", mixColor(selectedColor, "#39e7ff"));
   root.style.setProperty("--clock-brightness", brightness);
   root.style.setProperty("--clock-scale", scale);
   digital.hidden = mode !== "digital"; analog.hidden = mode !== "analog";
@@ -43,6 +52,7 @@ function drift(now = new Date()) {
 }
 function distance() { const p=[...pointers.values()]; return p.length<2?0:Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y); }
 app.addEventListener("pointerdown", e => {
+  if (e.target.closest?.(".mode-toggle")) return;
   app.setPointerCapture(e.pointerId); pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
   if(pointers.size===1) gesture={startY:e.clientY,startBrightness:brightness,startDistance:0,startScale:scale,moved:false};
   else if(pointers.size===2) { gesture.startDistance=distance(); gesture.startScale=scale; gesture.moved=true; }
@@ -55,7 +65,6 @@ app.addEventListener("pointermove", e => {
 });
 function pointerEnd(e) { const tap=pointers.size===1&&!gesture.moved; pointers.delete(e.pointerId); if(tap) color=(color+1)%colors.length; if(pointers.size<2) gesture.startDistance=0; paint(); save(); }
 app.addEventListener("pointerup",pointerEnd); app.addEventListener("pointercancel",pointerEnd);
-toggle.addEventListener("pointerdown",e=>e.stopPropagation());
 toggle.addEventListener("click",()=>{ mode=mode==="digital"?"analog":"digital"; paint(); save(); });
 paint(); drift(); tick(); setInterval(tick,1000);
 if("serviceWorker" in navigator) navigator.serviceWorker.register("./sw.js");
