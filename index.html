@@ -18,6 +18,9 @@
     .digital-clock span:first-child, .hour-hand { color: color-mix(in srgb, currentColor 94%, #ff4fd8); }
     .digital-clock span:last-child, .minute-hand { color: color-mix(in srgb, currentColor 94%, #39e7ff); }
     .analog-clock { border: 0; box-shadow: none; }
+    .analog-clock .marker { width: clamp(10px, 2vmin, 20px); height: clamp(10px, 2vmin, 20px); border-radius: 50%; }
+    .analog-clock .marker-12, .analog-clock .marker-6 { left: 50%; transform: translateX(-50%); }
+    .analog-clock .marker-3, .analog-clock .marker-9 { top: 50%; transform: translateY(-50%); }
   </style>
 </head>
 <body>
