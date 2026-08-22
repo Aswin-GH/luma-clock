@@ -9,7 +9,7 @@ const minuteHand = document.querySelector(".minute-hand");
 let mode = localStorage.getItem("clock-mode") === "analog" ? "analog" : "digital";
 let color = Number(localStorage.getItem("clock-color")) || 1;
 let brightness = Number(localStorage.getItem("clock-brightness")) || 1;
-let scale = Number(localStorage.getItem("clock-scale")) || 1;
+let scale = Math.min(1, Number(localStorage.getItem("clock-scale")) || 1);
 const pointers = new Map();
 let gesture = {};
 
@@ -32,6 +32,14 @@ function tick() {
   hourHand.style.transform = `translateX(-50%) rotate(${(h%12)*30+m*.5}deg)`;
   minuteHand.style.transform = `translateX(-50%) rotate(${m*6+now.getSeconds()*.1}deg)`;
   document.querySelector(".clock-stage").setAttribute("aria-label", `The time is ${h}:${String(m).padStart(2,"0")}`);
+  if (now.getSeconds() === 0) drift(now);
+}
+function drift(now = new Date()) {
+  const seed = Math.floor(now.getTime() / 60000);
+  const x = ((seed * 17) % 9) - 4;
+  const y = ((seed * 29) % 9) - 4;
+  root.style.setProperty("--drift-x", `${x}px`);
+  root.style.setProperty("--drift-y", `${y}px`);
 }
 function distance() { const p=[...pointers.values()]; return p.length<2?0:Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y); }
 app.addEventListener("pointerdown", e => {
@@ -41,7 +49,7 @@ app.addEventListener("pointerdown", e => {
 });
 app.addEventListener("pointermove", e => {
   if(!pointers.has(e.pointerId)) return; pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
-  if(pointers.size===2 && gesture.startDistance) { scale=Math.min(1.35,Math.max(.45,gesture.startScale*distance()/gesture.startDistance)); gesture.moved=true; }
+  if(pointers.size===2 && gesture.startDistance) { scale=Math.min(1,Math.max(.45,gesture.startScale*distance()/gesture.startDistance)); gesture.moved=true; }
   else if(pointers.size===1) { const delta=gesture.startY-e.clientY; if(Math.abs(delta)>10) gesture.moved=true; brightness=Math.min(1.25,Math.max(.18,gesture.startBrightness+delta/innerHeight)); }
   paint();
 });
@@ -49,5 +57,5 @@ function pointerEnd(e) { const tap=pointers.size===1&&!gesture.moved; pointers.d
 app.addEventListener("pointerup",pointerEnd); app.addEventListener("pointercancel",pointerEnd);
 toggle.addEventListener("pointerdown",e=>e.stopPropagation());
 toggle.addEventListener("click",()=>{ mode=mode==="digital"?"analog":"digital"; paint(); save(); });
-paint(); tick(); setInterval(tick,1000);
+paint(); drift(); tick(); setInterval(tick,1000);
 if("serviceWorker" in navigator) navigator.serviceWorker.register("./sw.js");
