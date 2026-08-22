@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Luma Clock">
+  <meta name="description" content="A bright, distraction-free clock that works offline.">
+  <title>Luma Clock</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icon-192.png">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main class="clock-app" aria-label="Clock">
+    <div class="clock-stage" aria-live="polite">
+      <div class="digital-clock"><span id="hours">00</span><span id="minutes">00</span></div>
+      <div class="analog-clock" hidden aria-hidden="true">
+        <div class="marker marker-12"></div><div class="marker marker-3"></div><div class="marker marker-6"></div><div class="marker marker-9"></div>
+        <div class="hand hour-hand"></div><div class="hand minute-hand"></div><div class="pin"></div>
+      </div>
+    </div>
+    <button class="mode-toggle" type="button" aria-label="Switch to analog clock"><span class="analog-icon"><i></i><i></i></span></button>
+    <p class="gesture-hint">tap · color&nbsp;&nbsp; swipe · brightness&nbsp;&nbsp; pinch · size</p>
+  </main>
+  <script src="./app.js"></script>
+</body>
+</html>
